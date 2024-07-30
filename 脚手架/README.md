@@ -104,19 +104,19 @@ console.log(`Hello mele-cli`)
 | -- mele # 根目录
 |   | -- packages
 |   |   | -- mele-cli # 脚手架源码
-|   |   |   |-- bin # 脚手架命令
-|   |   |   |   |-- index.js
-|   |   |   |-- src # 源码
-|   |   |   |   |-- index.js
-|   |   |   |-- package.json
-|   |   |   |-- README.md # 使用文档
+|   |   |   | -- bin # 脚手架命令
+|   |   |   |   | -- index.js
+|   |   |   | -- src # 源码
+|   |   |   |   | -- index.js
+|   |   |   | -- package.json
+|   |   |   | -- README.md # 使用文档
 |   | -- examples
 |   |   | -- test # 测试例子
-|   |   |   |-- package.json
-|   |-- .gitignore # 排除git提交的文件
-|   |-- pnpm-workspace.yaml
-|   |-- package.json
-|   |-- README.md # 使用文档
+|   |   |   | -- package.json
+|   | -- .gitignore # 排除git提交的文件
+|   | -- pnpm-workspace.yaml
+|   | -- package.json
+|   | -- README.md # 使用文档
 ```
 ##### 测试
 > 在`根目录`运行`pnpm i`，进入`examples/test`目录，运行`pnpm mele`测试脚手架命令
@@ -275,8 +275,12 @@ pnpm stage
 ```
 - ##### 测试提交
 ```sh
+# 测试钩子
 git add .
+git commit -m 'test'
+git push
 ```
+![alt text](image-12.png)
 ## 2.脚手架必备模块
 - 命令参数模块
 - 用户交互模块
