@@ -149,12 +149,13 @@ pnpm add -D typescript ts-node @types/node
 ```json
 {
   "scripts": {
-    "ts:init": "npx tsc --init", // 初始化ts配置文件，pnpm ts:init
+    "ts:init": "tsc --init", // 初始化ts配置文件，pnpm ts:init
     "ts:run": "ts-node", // 运行ts文件，pnpm ts:run ts文件路径
     "dev": "ts-node ./src/index.ts" // 运行ts文件，pnpm dev
   }
 }
 ```
+
 #### eslint
 > 进入`packages/mele-cli`下
 - ##### 安装
@@ -191,9 +192,11 @@ export default [
 ```
 - ##### 把npm脚本命令添加到`packages/mele-cli/package.json`
 ```json
-"scripts": {
+{
+  "scripts": {
     "lint": "eslint . --fix" // eslint检测
   }
+}
 ```
 ![alt text](image-10.png)
 #### prettier、eslint-config-prettier和eslint-plugin-prettier
@@ -239,9 +242,11 @@ export default [
 ```
 - ##### 把npm脚本命令添加到`packages/mele-cli/package.json`
 ```json
-"scripts": {
+{
+  "scripts": {
     "format": "prettier . --write" // 代码格式化
   }
+}
 ```
 ![alt text](image-11.png)
 #### lint-staged
@@ -281,6 +286,55 @@ git commit -m 'test'
 git push
 ```
 ![alt text](image-12.png)
+#### webpack和webpack-cli
+> 进入`packages/mele-cli`下
+- ##### 安装
+```sh
+pnpm add -D webpack webpack-cli @webpack-cli/generators
+```
+- ##### 把npm脚本命令添加到`packages/mele-cli/package.json`
+```json
+{
+  "scripts": {
+    "webpack:init": "webpack init", // 初始化配置
+  }
+}
+```
+- ##### 初始化配置文件
+```sh
+pnpm webpack:init
+```
+> 使用`TS`
+![alt text](image-13.png)
+> 脚手架是脚本工具不用，安装开发服务器
+![alt text](image-14.png)
+> 用不到HTML
+![alt text](image-15.png)
+> 用不到PWA
+![alt text](image-16.png)
+> 用不到CSS
+![alt text](image-17.png)
+> 用pnpm
+![alt text](image-18.png)
+> 是否覆盖原来的package.json
+![alt text](image-19.png)
+> 查看差异
+![alt text](image-20.png)
+![alt text](image-21.png)
+> 覆盖的话把信息都改了，所以终止覆盖，后面补上新加的npm脚本
+![alt text](image-22.png)
+
+- ##### 把刚刚要新增的npm脚本补上
+```json
+{
+  "scripts": {
+    "build":"webpack --mode=production --node-env=production",
+    "build:dev":"webpack --mode=development",
+    "build:prod":"webpack --mode=production --node-env=production",
+    "watch":"webpack --watch"
+  }
+}
+```
 ## 2.脚手架必备模块
 - 命令参数模块
 - 用户交互模块
@@ -289,6 +343,32 @@ git push
 - 自动安装依赖模块
 
 ### 2.1 命令参数模块
+#### 2.1.1获取命令参数
+##### 期望的效果
+```sh
+mele --name=test
+mele --name test
+```
+##### Node.js(`process.argv`)
+> nodejs 中的process.argv 属性返回一个数组，其中包含启动 Node.js 进程时的命令行参数
+```javascript
+const process = require('process');
+// 获取命令参数
+console.log(process.argv);
+```
+##### `yargs` 推荐
+> 进入`packages/mele-cli`目录下
+- ###### 安装
+```sh
+pnpm add yargs
+```
+- ###### 修改`packages/mele-cli/bin/index.js`
+```javascript
+#!/usr/bin/env node
+const yargs = require('yargs');
+console.log('name', yargs.argv.name);
+```
+
 ### 2.2 用户交互模块
 ### 2.3 文件拷贝模块
 ### 2.4 动态文件生成模块
