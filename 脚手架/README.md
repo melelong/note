@@ -126,7 +126,7 @@ console.log(`Hello mele-cli`)
 > 有助于开发代码规范
 #### husky
 > 进入`根目录`下
-- #### 安装
+- ##### 安装
 ```sh
 # 安装
 pnpm add -D -w husky
@@ -139,11 +139,12 @@ git commit -m 'test'
 ![alt text](image-1.png)
 #### typescript、@types/node和ts-node
 > 进入`packages/mele-cli`下
+- ##### 安装
 ```sh
 # 安装
 pnpm add -D typescript ts-node @types/node
 ```
-- 初始化
+- ##### 初始化
 > 把`packages/mele-cli/src`下`js`文件改成`ts`文件,并把npm脚本命令添加到`packages/mele-cli/package.json`
 ```json
 {
@@ -156,27 +157,27 @@ pnpm add -D typescript ts-node @types/node
 ```
 #### eslint
 > 进入`packages/mele-cli`下
-- 安装
+- ##### 安装
 ```sh
 # 安装并初始化
  pnpm create @eslint/config@latest
 ```
-- 检测并发现问题
+- ##### 检测并发现问题
 ![alt text](image-2.png)
-- `TS`支持es模块
+- ##### `TS`支持es模块
 ![alt text](image-3.png)
-- 写的是脚手架，不是前端项目
+- ##### 写的是脚手架，不是前端项目
 ![alt text](image-4.png)
-- 是否支持`TS`
+- ##### 是否支持`TS`
 ![alt text](image-5.png)
-- 运行在`node`端
+- ##### 运行在`node`端
 ![alt text](image-6.png)
 ![alt text](image-7.png)
-- 用pnpm安装
+- ##### 用pnpm安装
 ![alt text](image-8.png)
-- 安装完成
+- ##### 安装完成
 ![alt text](image-9.png)
-- `packages/mele-cli/eslint.config.mjs`
+- ##### `packages/mele-cli/eslint.config.mjs`
 ```javascript
 import globals from "globals";
 import pluginJs from "@eslint/js";
@@ -188,7 +189,7 @@ export default [
   ...tseslint.configs.recommended,
 ];
 ```
-- 把npm脚本命令添加到`packages/mele-cli/package.json`
+- ##### 把npm脚本命令添加到`packages/mele-cli/package.json`
 ```json
 "scripts": {
     "lint": "eslint . --fix" // eslint检测
@@ -197,11 +198,11 @@ export default [
 ![alt text](image-10.png)
 #### prettier、eslint-config-prettier和eslint-plugin-prettier
 > 进入`packages/mele-cli`目录下
-- 安装
+- ##### 安装
 ```sh
 pnpm add -D prettier eslint-config-prettier eslint-plugin-prettier
 ```
-- 创建`packages/mele-cli/.prettierrc.cjs`文件
+- ##### 创建`packages/mele-cli/.prettierrc.cjs`文件
 ```javascript
 module.exports = {
   $schema: 'https: //json.schemastore.org/prettierrc',
@@ -215,7 +216,7 @@ module.exports = {
   trailingComma: 'none'
 }
 ```
-- 把配置和插件添加到`packages/mele-cli/eslint.config.mjs`
+- ##### 把配置和插件添加到`packages/mele-cli/eslint.config.mjs`
 ```javascript
 import globals from 'globals'
 import pluginJs from '@eslint/js'
@@ -236,7 +237,7 @@ export default [
   }
 ]
 ```
-- 把npm脚本命令添加到`packages/mele-cli/package.json`
+- ##### 把npm脚本命令添加到`packages/mele-cli/package.json`
 ```json
 "scripts": {
     "format": "prettier . --write" // 代码格式化
@@ -245,11 +246,11 @@ export default [
 ![alt text](image-11.png)
 #### lint-staged
 > 进入`根目录`下
-- 安装
+- ##### 安装
 ```sh
 pnpm add -D -w lint-staged
 ```
-- 把npm脚本命令和`lint-staged`配置添加到`package.json`
+- ##### 把npm脚本命令和`lint-staged`配置添加到`package.json`
 ```json
 {
   "scripts": {
@@ -265,14 +266,14 @@ pnpm add -D -w lint-staged
   }
 }
 ```
-- 修改`./.husky/pre-commit`文件
+- ##### 修改`./.husky/pre-commit`文件
 ```sh
 #!/usr/bin/env sh
 . "$(dirname -- "$0")/_/husky.sh"
 
 pnpm stage
 ```
-- 测试提交
+- ##### 测试提交
 ```sh
 git add .
 ```
