@@ -126,7 +126,7 @@ console.log(`Hello mele-cli`)
 > 有助于开发代码规范
 #### husky
 > 进入`根目录`下
-- 安装
+- #### 安装
 ```sh
 # 安装
 pnpm add -D -w husky
