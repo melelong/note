@@ -125,9 +125,9 @@ console.log(`Hello mele-cli`)
 ### 安装用到的依赖
 > 有助于开发代码规范
 #### husky
-> 进入`根目录`下
 - ##### 安装
 ```sh
+# 进入`根目录`下
 # 安装
 pnpm add -D -w husky
 # 初始化
@@ -138,9 +138,9 @@ git commit -m 'test'
 ```
 ![alt text](image-1.png)
 #### typescript、@types/node和ts-node
-> 进入`packages/mele-cli`下
 - ##### 安装
 ```sh
+# 进入`packages/mele-cli`下
 # 安装
 pnpm add -D typescript ts-node @types/node
 ```
@@ -211,9 +211,9 @@ pnpm ts:build
 ![alt text](image-23.png)
 
 #### eslint
-> 进入`packages/mele-cli`下
 - ##### 安装
 ```sh
+# 进入`packages/mele-cli`下
 # 安装并初始化
  pnpm create @eslint/config@latest
 ```
@@ -254,9 +254,9 @@ export default [
 ```
 ![alt text](image-10.png)
 #### prettier、eslint-config-prettier和eslint-plugin-prettier
-> 进入`packages/mele-cli`目录下
 - ##### 安装
 ```sh
+# 进入`packages/mele-cli`目录下
 pnpm add -D prettier eslint-config-prettier eslint-plugin-prettier
 ```
 - ##### 创建`packages/mele-cli/.prettierrc.cjs`文件
@@ -304,9 +304,9 @@ export default [
 ```
 ![alt text](image-11.png)
 #### lint-staged
-> 进入`根目录`下
 - ##### 安装
 ```sh
+# 进入`根目录`下
 pnpm add -D -w lint-staged
 ```
 - ##### 把npm脚本命令和`lint-staged`配置添加到`package.json`
@@ -349,13 +349,13 @@ git push
 
 ### 2.1 配置打包工具(用tsc打包优缺点，第三方的库tsc打包不了)
 #### webpack、webpack-cli、ts-loader和CleanWebpackPlugin
-> 进入`packages/mele-cli`下
 - webpack、webpack-cli(用于打包)
 - @webpack-cli/generators(用于生成配置文件)
 - ts-loader(用于解析TS)
 - CleanWebpackPlugin(用于清理打包结果)
 - ##### 安装
 ```sh
+# 进入`packages/mele-cli`下
 pnpm add -D webpack webpack-cli @webpack-cli/generators ts-loader CleanWebpackPlugin
 ```
 - ##### 把npm脚本命令添加到`packages/mele-cli/package.json`
@@ -482,13 +482,13 @@ pnpm mele
 > 测试成功
 ![alt text](image-27.png)
 #### babel-loader、@babel/core和@babel/preset-env(兼容性)
-> 进入`packages/mele-cli`下
 - babel-loader(用于解析js语法)
 - @babel/core(babel核心包)
 - @babel/preset-env(babel预设)
 > 虽然`tsc`也可以转换兼容性强的代码,但是只限于ts文件。babel可以兼容性更好,有些特殊语法可以利用babel强大的插件去转换
 - ##### 安装
 ```sh
+# 进入`packages/mele-cli`下
 pnpm add -D babel-loader @babel/core @babel/preset-env
 ```
 - ##### 修改`webpack.config.js`配置文件
@@ -534,9 +534,10 @@ const process = require('process');
 console.log(process.argv);
 ```
 ##### `commander` 推荐
-> 进入`packages/mele-cli`目录下
+> commander 是一个命令行接口的库，用于简化 Node.js 应用程序的命令行参数解析。它提供了强大的功能，如选项、参数、子命令等，使得构建命令行工具变得简单。
 - ###### 安装
 ```sh
+# 进入`packages/mele-cli`目录下
 pnpm add commander
 ```
 - ###### 修改`packages/mele-cli/src/index.ts`
@@ -583,7 +584,7 @@ pnpm mele greet -n mele -a 24
 ###### 脚手架命令执行效果
 ![alt text](image-31.png)
 ### 2.3 用户交互模块
-#### 
+#### `inquirer` 推荐
 ### 2.4 文件拷贝模块
 ### 2.5 动态文件生成模块
 ### 2.6 自动安装依赖模块
