@@ -468,7 +468,7 @@ console.log('readFileSync', readFileSync)
 ```sh
 pnpm build
 ```
-> 打包成功
+##### 打包成功
 ![alt text](image-25.png)
 ![alt text](image-26.png)
 ```sh
@@ -523,7 +523,7 @@ pnpm build
 ![alt text](image-28.png)
 ### 2.2 命令参数模块
 #### 期望的效果
-![alt text](image-31.png)
+![alt text](image-29.png)
 #### 获取命令参数
 
 ##### Node.js(`process.argv`)
@@ -579,9 +579,9 @@ pnpm mele greet
 pnpm mele greet -n mele -a 24
 ```
 ###### 打包命令执行效果
-![alt text](image-29.png)
-###### 脚手架命令执行效果
 ![alt text](image-30.png)
+###### 脚手架命令执行效果
+![alt text](image-31.png)
 ### 2.3 用户交互模块
 #### 
 ### 2.4 文件拷贝模块
