@@ -145,16 +145,70 @@ git commit -m 'test'
 pnpm add -D typescript ts-node @types/node
 ```
 - ##### 初始化
-> 把`packages/mele-cli/src`下`js`文件改成`ts`文件,并把npm脚本命令添加到`packages/mele-cli/package.json`
+> 把`packages/mele-cli/src`下`js`文件改成`ts`文件,并把npm脚本命令添加到`packages/mele-cli/package.json`,运行`pnpm ts:init`生成配置文件
+- ###### `packages/mele-cli/package.json`
 ```json
 {
   "scripts": {
     "ts:init": "tsc --init", // 初始化ts配置文件，pnpm ts:init
+    "ts:build":"tsc", // 编译ts文件，pnpm ts:build
     "ts:run": "ts-node", // 运行ts文件，pnpm ts:run ts文件路径
     "dev": "ts-node ./src/index.ts" // 运行ts文件，pnpm dev
   }
 }
 ```
+- ###### 修改`packages/mele-cli/tsconfig.json`
+```json
+{
+  /* 编译器选项配置，用于指导TypeScript如何编译代码 */
+  "compilerOptions": {
+    /* 指定编译后输出文件的目录 */
+    "outDir": "./bin",
+    /* 设置项目的根目录，用于解析相对路径 */
+    "baseUrl": "./",
+    /* 指定目标JavaScript版本 */
+    "target": "ES5",
+    "paths": {
+      "@": ["./src"]
+    },
+    /* 允许在TypeScript项目中使用JavaScript文件 */
+    "allowJs": true,
+    /* 指定模块解析策略 */
+    "moduleResolution": "node",
+    /* 指定模块系统 */
+    "module": "CommonJS",
+    /* 允许使用ES6模块导出的语法 */
+    "esModuleInterop": true,
+    /* 在导入文件名大小写不一致时仍能正确导入 */
+    "forceConsistentCasingInFileNames": false,
+    /* 跳过库文件的类型检查，加快编译速度 */
+    "skipLibCheck": true,
+    /* 生成类型声明文件 */
+    "declaration": true,
+    /* 不输出注释 */
+    "removeComments": true,
+    /* 允许非默认导出的模块使用default导入 */
+    "allowSyntheticDefaultImports": true,
+    /* 启用增量构建，提高构建效率 */
+    "incremental": true,
+    /* 严格检查null值的赋值和传播 */
+    "strictNullChecks": false,
+    /* 禁止隐式any类型 */
+    "noImplicitAny": false,
+    /* 严格检查bind、call和apply的使用 */
+    "strictBindCallApply": false,
+    /* 禁止switch语句中case穿透 */
+    "noFallthroughCasesInSwitch": false
+  },
+  "include": ["src/**/*"],
+  "exclude": ["node_modules", "dist", "bin"]
+}
+```
+- ###### 测试编译
+```sh
+pnpm ts:build
+```
+![alt text](image-23.png)
 
 #### eslint
 > 进入`packages/mele-cli`下
@@ -259,14 +313,14 @@ pnpm add -D -w lint-staged
 ```json
 {
   "scripts": {
-    "lint": "cd ./packages/mele-cli & pnpm lint & cd ../..", // eslint检测脚手架代码
-    "format": "cd ./packages/mele-cli & pnpm format & cd ../..", // 格式化脚手架代码
+    "lint": "pnpm --filter=mele-cli lint", // eslint检测脚手架代码
+    "format": "pnpm --filter=mele-cli format", // 格式化脚手架代码
     "stage": "lint-staged", // 运行lint-staged
   },
   "lint-staged": {
-    "**/*.{js,cjs,mjs,ts,json}": [
-      "pnpm lint",
-      "pnpm format"
+    "packages/mele-cli/**/*.{js,cjs,mjs,ts,json}": [
+      "pnpm --filter=mele-cli lint",
+      "pnpm --filter=mele-cli format"
     ]
   }
 }
@@ -286,11 +340,23 @@ git commit -m 'test'
 git push
 ```
 ![alt text](image-12.png)
-#### webpack和webpack-cli
+## 2.脚手架必备模块
+- 命令参数模块
+- 用户交互模块
+- 文件拷贝模块
+- 动态文件生成模块
+- 自动安装依赖模块
+
+### 2.1 配置打包工具(用tsc打包优缺点，第三方的库tsc打包不了)
+#### webpack、webpack-cli、ts-loader和CleanWebpackPlugin
 > 进入`packages/mele-cli`下
+- webpack、webpack-cli(用于打包)
+- @webpack-cli/generators(用于生成配置文件)
+- ts-loader(用于解析TS)
+- CleanWebpackPlugin(用于清理打包结果)
 - ##### 安装
 ```sh
-pnpm add -D webpack webpack-cli @webpack-cli/generators
+pnpm add -D webpack webpack-cli @webpack-cli/generators ts-loader CleanWebpackPlugin
 ```
 - ##### 把npm脚本命令添加到`packages/mele-cli/package.json`
 ```json
@@ -335,20 +401,131 @@ pnpm webpack:init
   }
 }
 ```
-## 2.脚手架必备模块
-- 命令参数模块
-- 用户交互模块
-- 文件拷贝模块
-- 动态文件生成模块
-- 自动安装依赖模块
-
-### 2.1 命令参数模块
-#### 2.1.1获取命令参数
-##### 期望的效果
-```sh
-mele --name=test
-mele --name test
+- ##### 修改`webpack.config.js`配置文件
+```javascript
+/* eslint-disable @typescript-eslint/no-var-requires */
+const path = require('path')
+const { CleanWebpackPlugin } = require('clean-webpack-plugin')
+// 判断环境
+const isProduction = process.env.NODE_ENV == 'production'
+const config = {
+  entry: './src/index.ts', // 入口文件
+  output: {
+    path: path.resolve(__dirname, 'bin'), // 打包目录
+    filename: 'index.cjs', // 打包产物名cjs
+    library: {
+      name: 'mele-cli',
+      type: 'commonjs' // 类型 commonjs
+    }
+  },
+  target: "node", // 打包结果node环境
+  plugins: [new CleanWebpackPlugin()],
+  module: {
+    rules: [
+      {
+        test: /\.(ts|tsx)$/i, // 解析ts文件
+        loader: 'ts-loader',
+        exclude: ['/node_modules/'] // 排除node_modules
+      },
+      {
+        test: /\.(eot|svg|ttf|woff|woff2|png|jpg|gif)$/i,
+        type: 'asset'
+      }
+    ]
+  },
+  resolve: {
+    extensions: ['.tsx', '.ts', '.jsx', '.js', '.mjs', '.cjs', '...'] // 解析文件
+  },
+  stats: {
+    errorDetails: true
+  }
+}
+module.exports = () => {
+  if (isProduction) {
+    config.mode = 'production'
+  } else {
+    config.mode = 'development'
+  }
+  return config
+}
 ```
+- ##### 修改`packages/mele-cli/package.json`
+```json
+{
+  "bin": {
+    "mele": "./bin/index.cjs"
+  },
+}
+```
+- ##### 修改`packages/mele-cli/src/index.ts`
+```javascript
+#!/usr/bin/env node
+
+import { readFileSync } from 'fs'
+console.log('readFileSync', readFileSync)
+```
+- ##### 测试一下
+```sh
+pnpm build
+```
+> 打包成功
+![alt text](image-25.png)
+![alt text](image-26.png)
+```sh
+# 进入测试项目
+cd ../../examples/test
+# 重新安装依赖
+pnpm i
+# 测试脚手架命令
+pnpm mele
+```
+> 测试成功
+![alt text](image-27.png)
+#### babel-loader、@babel/core和@babel/preset-env(兼容性)
+> 进入`packages/mele-cli`下
+- babel-loader(用于解析js语法)
+- @babel/core(babel核心包)
+- @babel/preset-env(babel预设)
+> 虽然`tsc`也可以转换兼容性强的代码,但是只限于ts文件。babel可以兼容性更好,有些特殊语法可以利用babel强大的插件去转换
+- ##### 安装
+```sh
+pnpm add -D babel-loader @babel/core @babel/preset-env
+```
+- ##### 修改`webpack.config.js`配置文件
+```javascript
+{
+  module: {
+    rules: [
+      {
+        test: /\.m?js$/,
+        exclude: /node_modules/,
+        use: {
+          loader: "babel-loader",
+          options: {
+            presets: ['@babel/preset-env']
+          }
+        }
+      }
+    ]
+  }
+}
+```
+- ##### 创建`babel.config.json`配置文件
+```json
+{
+  "presets": ["@babel/preset-env"]
+}
+```
+- ##### 测试一下
+```sh
+pnpm build
+```
+![alt text](image-28.png)
+### 2.2 命令参数模块
+#### 期望的效果
+![alt text](image-31.png)
+#### 获取命令参数
+
 ##### Node.js(`process.argv`)
 > nodejs 中的process.argv 属性返回一个数组，其中包含启动 Node.js 进程时的命令行参数
 ```javascript
@@ -356,20 +533,57 @@ const process = require('process');
 // 获取命令参数
 console.log(process.argv);
 ```
-##### `yargs` 推荐
+##### `commander` 推荐
 > 进入`packages/mele-cli`目录下
 - ###### 安装
 ```sh
-pnpm add yargs
+pnpm add commander
 ```
-- ###### 修改`packages/mele-cli/bin/index.js`
+- ###### 修改`packages/mele-cli/src/index.ts`
 ```javascript
+// 基础用法，详细用法看文档(https://github.com/tj/commander.js/blob/master/Readme_zh-CN.md)
 #!/usr/bin/env node
-const yargs = require('yargs');
-console.log('name', yargs.argv.name);
+import { program } from 'commander'
+import { readFileSync } from 'fs'
+// 导入package.json
+const json = JSON.parse(readFileSync('./package.json', 'utf-8'))
+// 设置版本号
+program.version(json?.version || '未知版本号')
+// 定义命令选项
+program
+  .option('-n, --name <name>', 'your name', 'John Doe')
+  .option('-a, --age <age>', 'your age', '30')
+// 定义命令
+program
+  .command('greet') // 命令名称
+  .description('Greets the user') // 命令描述
+  .action((_option) => {
+    console.log(`Hello, ${program.opts().name}! You are${program.opts().age} years old.`)
+  })
+// 解析命令行参数
+program.parse(process.argv)
 ```
-
-### 2.2 用户交互模块
-### 2.3 文件拷贝模块
-### 2.4 动态文件生成模块
-### 2.5 自动安装依赖模块
+- ##### 测试一下
+```sh
+# 打包
+pnpm build
+# 进入测试项目
+cd ../../examples/test
+# 重新安装依赖
+pnpm i
+# 测试脚手架命令
+pnpm mele
+pnpm mele -h
+pnpm mele -V
+pnpm mele greet
+pnpm mele greet -n mele -a 24
+```
+###### 打包命令执行效果
+![alt text](image-29.png)
+###### 脚手架命令执行效果
+![alt text](image-30.png)
+### 2.3 用户交互模块
+#### 
+### 2.4 文件拷贝模块
+### 2.5 动态文件生成模块
+### 2.6 自动安装依赖模块
