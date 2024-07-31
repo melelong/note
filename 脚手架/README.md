@@ -370,24 +370,24 @@ pnpm add -D webpack webpack-cli @webpack-cli/generators ts-loader CleanWebpackPl
 ```sh
 pnpm webpack:init
 ```
-> 使用`TS`
+###### 使用`TS`
 ![alt text](image-13.png)
-> 脚手架是脚本工具不用，安装开发服务器
+###### 脚手架是脚本工具不用，安装开发服务器
 ![alt text](image-14.png)
-> 用不到HTML
+###### 用不到HTML
 ![alt text](image-15.png)
-> 用不到PWA
+###### 用不到PWA
 ![alt text](image-16.png)
-> 用不到CSS
+###### 用不到CSS
 ![alt text](image-17.png)
-> 用pnpm
+###### 用pnpm
 ![alt text](image-18.png)
-> 是否覆盖原来的package.json
+###### 是否覆盖原来的package.json
 ![alt text](image-19.png)
-> 查看差异
+###### 查看差异
 ![alt text](image-20.png)
 ![alt text](image-21.png)
-> 覆盖的话把信息都改了，所以终止覆盖，后面补上新加的npm脚本
+###### 覆盖的话把信息都改了，所以终止覆盖，后面补上新加的npm脚本
 ![alt text](image-22.png)
 
 - ##### 把刚刚要新增的npm脚本补上
